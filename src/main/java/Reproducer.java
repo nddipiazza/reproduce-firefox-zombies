@@ -131,6 +131,8 @@ public class Reproducer {
       waitForPageToBeReady(driver);
       if (driver.getPageSource().contains("still waiting for reload")) {
         System.out.println("failed to wait for content to be ready for page.");
+      } else {
+        System.out.println("successful download of " + nextPage);
       }
     }
   }
