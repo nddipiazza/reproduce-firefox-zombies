@@ -120,7 +120,7 @@ public class Reproducer {
     firefoxProfile.setPreference("privacy.popups.showBrowserMessage", false);
     firefoxProfile.setPreference("dom.disable_beforeunload", true);
 
-    firefoxProfile.addExtension(new File("requestcounter.xpi"));
+    //firefoxProfile.addExtension(new File("requestcounter.xpi"));
 
     options.setProfile(firefoxProfile);
 
@@ -132,11 +132,16 @@ public class Reproducer {
     while (!killFileFound()) {
       int nextPage = new Random().nextInt(10000);
       driver.get((baseUrl == null ? "http://localhost:7001" : baseUrl) + "/page" + nextPage + ".html");
-      waitForPageToBeReady(driver);
-      if (driver.getPageSource().contains("still waiting for reload")) {
-        System.out.println("failed to wait for content to be ready for page.");
-      } else {
-        System.out.println("successful download of " + nextPage);
+//      waitForPageToBeReady(driver);
+//      if (driver.getPageSource().contains("still waiting for reload")) {
+//        System.out.println("failed to wait for content to be ready for page.");
+//      } else {
+//        System.out.println("successful download of " + nextPage);
+//      }
+      try {
+        Thread.sleep(new Random().nextInt(20));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     }
     try {
