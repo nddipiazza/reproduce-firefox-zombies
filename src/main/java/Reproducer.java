@@ -17,6 +17,10 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Reproducer {
+  private static boolean killFileFound() {
+    return new File("killfile").exists();
+  }
+
   static String baseUrl = null;
   static String firefoxExe = null;
   static int threadCount = 50;
@@ -125,7 +129,7 @@ public class Reproducer {
     driver.manage().timeouts().implicitlyWait(20000L, TimeUnit.MILLISECONDS);
     driver.manage().timeouts().pageLoadTimeout(20000L, TimeUnit.MILLISECONDS);
     driver.manage().timeouts().setScriptTimeout(20000L, TimeUnit.MILLISECONDS);
-    while (true) {
+    while (!killFileFound()) {
       int nextPage = new Random().nextInt(10000);
       driver.get((baseUrl == null ? "http://localhost:7001" : baseUrl) + "/page" + nextPage + ".html");
       waitForPageToBeReady(driver);
@@ -134,6 +138,12 @@ public class Reproducer {
       } else {
         System.out.println("successful download of " + nextPage);
       }
+    }
+    try {
+      driver.quit();
+    } catch (Exception e) {
+      System.out.println("Couldn't quit!");
+      e.printStackTrace();
     }
   }
 }
